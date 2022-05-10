@@ -1,11 +1,11 @@
 package de.rode.sudoku;
 
-import de.rode.sudoku.display.Displayer;
 import de.rode.sudoku.dto.Sudoku;
 import de.rode.sudoku.dto.SudokuValidateError;
-import de.rode.sudoku.parse.Parser;
-import de.rode.sudoku.solve.Solver;
-import de.rode.sudoku.validate.Validator;
+import de.rode.sudoku.logic.Displayer;
+import de.rode.sudoku.logic.Parser;
+import de.rode.sudoku.logic.Solver;
+import de.rode.sudoku.logic.Validator;
 import io.vavr.control.Either;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -65,8 +65,16 @@ public class SudokuService {
 
     @GetMapping("/solve/{string}")
     public ResponseEntity solve(@PathVariable String string) {
-        return null;
-    }
 
+        final Either<SudokuValidateError, Sudoku> either = parser.parseFromString(string);
+
+        if (either.isLeft()) {
+            return ResponseEntity.status(either.getLeft().getStatus())
+                    .body(either.getLeft());
+        } else {
+            return ResponseEntity.status(200)
+                    .body(solver.solve(either.get()));
+        }
+    }
 
 }

@@ -1,4 +1,4 @@
-package de.rode.sudoku.validate;
+package de.rode.sudoku.logic;
 
 import de.rode.sudoku.dto.Sudoku;
 import de.rode.sudoku.dto.SudokuValidateError;

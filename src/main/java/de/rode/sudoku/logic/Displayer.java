@@ -1,4 +1,4 @@
-package de.rode.sudoku.display;
+package de.rode.sudoku.logic;
 
 import de.rode.sudoku.dto.Sudoku;
 import lombok.extern.slf4j.Slf4j;
