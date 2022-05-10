@@ -48,12 +48,22 @@ public class SudokuService {
         }
     }
 
-    @GetMapping("/display")
+    @GetMapping("/display/{string}")
     public ResponseEntity display(@PathVariable String string) {
-        return null;
+
+        final Either<SudokuValidateError, Sudoku> either = parser.parseFromString(string);
+
+        if (either.isLeft()) {
+            return ResponseEntity.status(either.getLeft().getStatus())
+                    .body(either.getLeft());
+        } else {
+            return ResponseEntity.status(200)
+                    .body(displayer.display(either.get()));
+        }
+
     }
 
-    @GetMapping("/solve")
+    @GetMapping("/solve/{string}")
     public ResponseEntity solve(@PathVariable String string) {
         return null;
     }
