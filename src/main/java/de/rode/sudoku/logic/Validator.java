@@ -28,8 +28,8 @@ public class Validator {
 
     public boolean rowLegit(Sudoku sudoku, int rowNumber) {
         Set<Integer> numbers = new HashSet<>();
-        for (int i = 0; i < 9; i++) {
-            int number = sudoku.getFields()[rowNumber][i];
+        for (int j = 0; j < 9; j++) {
+            int number = sudoku.getFields()[rowNumber][j];
             if (numbers.contains(number)) {
                 return false;
             }
@@ -38,7 +38,22 @@ public class Validator {
         return true;
     }
 
-    public boolean squareLegit(Sudoku sudoku, int columnNumber, int rowNumber) {
+    public boolean squareLegit(Sudoku sudoku, int column, int row) {
+        Set<Integer> numbers = new HashSet<>();
+        int imin = column < 3 ? 0 : (column < 6 ? 3 : 6);
+        int imax = imin + 3;
+        int jmin = row < 3 ? 0 : (row < 6 ? 3 : 6);
+        int jmax = jmin + 3;
+        for (int i=imin; i<imax; i++) {
+            for (int j = jmin; j<jmax; j++) {
+                int number = sudoku.getFields()[i][j];
+                if (numbers.contains(number)) {
+                    return false;
+                }
+                numbers.add(number);
+            }
+        }
+
         return false;
     }
 
