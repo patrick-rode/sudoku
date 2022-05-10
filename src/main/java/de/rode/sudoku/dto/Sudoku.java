@@ -14,4 +14,6 @@ public class Sudoku {
     @Builder.Default
     private int[][] fields = new int[9][9];
 
+    private String string;
+
 }

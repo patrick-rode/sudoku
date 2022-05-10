@@ -1,11 +1,13 @@
 package de.rode.sudoku.validate;
 
 import de.rode.sudoku.dto.Sudoku;
-import de.rode.sudoku.dto.ValidationResult;
+import de.rode.sudoku.dto.SudokuValidateError;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.time.ZonedDateTime;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Slf4j
@@ -14,7 +16,7 @@ public class Validator {
 
     public boolean columnLegit(Sudoku sudoku, int columnNumber) {
         Set<Integer> numbers = new HashSet<>();
-        for (int i=0; i<9; i++) {
+        for (int i = 0; i < 9; i++) {
             int number = sudoku.getFields()[i][columnNumber];
             if (numbers.contains(number)) {
                 return false;
@@ -26,7 +28,7 @@ public class Validator {
 
     public boolean rowLegit(Sudoku sudoku, int rowNumber) {
         Set<Integer> numbers = new HashSet<>();
-        for (int i=0; i<9; i++) {
+        for (int i = 0; i < 9; i++) {
             int number = sudoku.getFields()[rowNumber][i];
             if (numbers.contains(number)) {
                 return false;
@@ -45,7 +47,7 @@ public class Validator {
         if (fields.length != 9) {
             return false;
         }
-        for (int i=0; i<9; i++) {
+        for (int i = 0; i < 9; i++) {
             if (fields[i].length != 9) {
                 return false;
             }
@@ -53,42 +55,52 @@ public class Validator {
         return true;
     }
 
-    public ValidationResult validate(Sudoku sudoku) {
+    public Optional<SudokuValidateError> validate(final Sudoku sudoku) {
 
         if (!sizeLegit(sudoku)) {
-            log.info("Groesse vom Sudoku entspricht nicht den Vorschriften.");
-            return ValidationResult.builder()
-                    .legit(false)
-                    .build();
+            return Optional.of(SudokuValidateError.builder()
+                    .timestamp(ZonedDateTime.now())
+                    .status(400)
+                    .error("Bad Request")
+                    .message("Groesse vom Sudoku entspricht nicht den Vorschriften.")
+                    .path("/sudoku/validate")
+                    .build());
         }
 
-        for (int i=0; i<9; i++) {
+        for (int i = 0; i < 9; i++) {
             if (!rowLegit(sudoku, i)) {
-                log.info("Zeile {} entspricht nicht den Vorschriften.", i);
-                return ValidationResult.builder()
-                        .legit(false)
-                        .build();
+                return Optional.of(SudokuValidateError.builder()
+                        .timestamp(ZonedDateTime.now())
+                        .status(400)
+                        .error("Bad Request")
+                        .message(String.format("Zeile %s entspricht nicht den Vorschriften.", i))
+                        .path("/sudoku/validate")
+                        .build());
             } else if (!columnLegit(sudoku, i)) {
-                log.info("Spalte {} entspricht nicht den Vorschriften.", i);
-                return ValidationResult.builder()
-                        .legit(false)
-                        .build();
+                return Optional.of(SudokuValidateError.builder()
+                        .timestamp(ZonedDateTime.now())
+                        .status(400)
+                        .error("Bad Request")
+                        .message(String.format("Spalte %s entspricht nicht den Vorschriften.", i))
+                        .path("/sudoku/validate")
+                        .build());
             }
         }
 
-        for (int i=0; i<3; i++) {
-            for (int j=0; j<3; j++) {
-                if (!squareLegit(sudoku, i,j)) {
-                    log.info("Quadrat ({}|{}) entspricht nicht den Vorschriften.", i, j);
-                    return ValidationResult.builder()
-                            .legit(false)
-                            .build();
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (!squareLegit(sudoku, i, j)) {
+                    return Optional.of(SudokuValidateError.builder()
+                            .timestamp(ZonedDateTime.now())
+                            .status(400)
+                            .error("Bad Request")
+                            .message(String.format("Quadrat (%s|%s) entspricht nicht den Vorschriften.", i, j))
+                            .path("/sudoku/validate")
+                            .build());
                 }
             }
         }
 
-        return ValidationResult.builder()
-                .legit(true)
-                .build();
+        return Optional.empty();
     }
 }
