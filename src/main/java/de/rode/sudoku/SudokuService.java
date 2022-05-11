@@ -11,10 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -29,10 +26,10 @@ public class SudokuService {
     private final Displayer displayer;
     private final Solver solver;
 
-    @GetMapping("/validate/{string}")
-    public ResponseEntity validate(@PathVariable String string) {
+    @GetMapping("/validate")
+    public ResponseEntity validate(@RequestParam("sudokuParam") String sudokuParam) {
 
-        final Either<SudokuValidateError, Sudoku> either = parser.parseFromString(string);
+        final Either<SudokuValidateError, Sudoku> either = parser.parseFromString(sudokuParam);
 
         if (either.isLeft()) {
             return ResponseEntity.status(either.getLeft().getStatus())
@@ -49,9 +46,9 @@ public class SudokuService {
     }
 
     @GetMapping("/display/{string}")
-    public ResponseEntity display(@PathVariable String string) {
+    public ResponseEntity display(@RequestParam("sudokuParam") String sudokuParam) {
 
-        final Either<SudokuValidateError, Sudoku> either = parser.parseFromString(string);
+        final Either<SudokuValidateError, Sudoku> either = parser.parseFromString(sudokuParam);
 
         if (either.isLeft()) {
             return ResponseEntity.status(either.getLeft().getStatus())
@@ -64,9 +61,9 @@ public class SudokuService {
     }
 
     @GetMapping("/solve/{string}")
-    public ResponseEntity solve(@PathVariable String string) {
+    public ResponseEntity solve(@RequestParam("sudokuParam") String sudokuParam) {
 
-        final Either<SudokuValidateError, Sudoku> either = parser.parseFromString(string);
+        final Either<SudokuValidateError, Sudoku> either = parser.parseFromString(sudokuParam);
 
         if (either.isLeft()) {
             return ResponseEntity.status(either.getLeft().getStatus())
