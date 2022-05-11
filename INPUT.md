@@ -51,9 +51,5 @@ new int[][]{
 ein Sudoku instanziieren, so nennen wir in der obersten Zeile die ersten drei Werte
 
 $$
-\begin{aligned}
-\dot{x} & = \sigma(y-x) \\
-\dot{y} & = \rho x - y - xz \\
-\dot{z} & = -\beta z + xy
-\end{aligned}
+\frac{n!}{k!(n-k)!} = {n \choose k}
 $$
