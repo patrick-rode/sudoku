@@ -11,10 +11,17 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.Optional;
 
+@Validated
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @RequestMapping("/sudoku")
 @RestController
@@ -27,51 +34,42 @@ public class SudokuService {
     private final Solver solver;
 
     @GetMapping("/validate")
-    public ResponseEntity validate(@RequestParam("sudokuParam") String sudokuParam) {
+    public ResponseEntity validate(@RequestParam("sudokuParam")
+                                   @Size(min = 81, max = 81)
+                                   @Pattern(regexp = "^[0-9]*$") String sudokuParam) {
 
-        final Either<SudokuValidateError, Sudoku> either = parser.parseFromString(sudokuParam);
+        final Sudoku sudoku = parser.parseFromString(sudokuParam);
 
-        if (either.isLeft()) {
-            return ResponseEntity.status(either.getLeft().getStatus())
-                    .body(either.getLeft());
-        } else {
-            final Optional<SudokuValidateError> optionalError = validator.validate(either.get());
-            if (optionalError.isPresent()) {
-                return ResponseEntity.status(400)
-                        .body(optionalError.get());
-            }
-            return ResponseEntity.status(200)
-                    .body("Ok - Der Eingabewert ist valide.");
+        final Optional<SudokuValidateError> optionalError = validator.validate(sudoku);
+        if (optionalError.isPresent()) {
+            return ResponseEntity.status(400)
+                    .body(optionalError.get());
         }
+        return ResponseEntity.status(200)
+                .body("Ok - Der Eingabewert ist valide.");
     }
 
     @GetMapping("/display")
-    public ResponseEntity display(@RequestParam("sudokuParam") String sudokuParam) {
+    public ResponseEntity display(@RequestParam("sudokuParam")
+                                  @Size(min = 81, max = 81)
+                                  @Pattern(regexp = "^[0-9]*$") String sudokuParam) {
 
-        final Either<SudokuValidateError, Sudoku> either = parser.parseFromString(sudokuParam);
+        final Sudoku sudoku = parser.parseFromString(sudokuParam);
 
-        if (either.isLeft()) {
-            return ResponseEntity.status(either.getLeft().getStatus())
-                    .body(either.getLeft());
-        } else {
-            return ResponseEntity.status(200)
-                    .body(displayer.display(either.get()));
-        }
-
+        return ResponseEntity.status(200)
+                .body(displayer.display(sudoku));
     }
 
     @GetMapping("/solve")
-    public ResponseEntity solve(@RequestParam("sudokuParam") String sudokuParam) {
+    public ResponseEntity solve(@RequestParam("sudokuParam")
+                                @Size(min = 81, max = 81)
+                                @Pattern(regexp = "^[0-9]*$") String sudokuParam) {
 
-        final Either<SudokuValidateError, Sudoku> either = parser.parseFromString(sudokuParam);
+        final Sudoku sudoku = parser.parseFromString(sudokuParam);
 
-        if (either.isLeft()) {
-            return ResponseEntity.status(either.getLeft().getStatus())
-                    .body(either.getLeft());
-        } else {
-            return ResponseEntity.status(200)
-                    .body(solver.solve(either.get()));
-        }
+        return ResponseEntity.status(200)
+                .body(solver.solve(sudoku));
+
     }
 
 }

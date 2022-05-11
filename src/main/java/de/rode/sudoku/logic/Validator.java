@@ -18,8 +18,11 @@ public class Validator {
         Set<Integer> numbers = new HashSet<>();
         for (int i = 0; i < 9; i++) {
             int number = sudoku.getFields()[i][columnNumber];
+            if (number == 0) {
+                continue; // 0 = leeres Feld
+            }
             if (numbers.contains(number)) {
-                return false;
+                return false; // Zahl kam 2x vor
             }
             numbers.add(number);
         }
@@ -30,8 +33,11 @@ public class Validator {
         Set<Integer> numbers = new HashSet<>();
         for (int j = 0; j < 9; j++) {
             int number = sudoku.getFields()[rowNumber][j];
+            if (number == 0) {
+                continue; // 0 = leeres Feld
+            }
             if (numbers.contains(number)) {
-                return false;
+                return false; // Zahl kam 2x vor
             }
             numbers.add(number);
         }
@@ -47,8 +53,11 @@ public class Validator {
         for (int i=imin; i<imax; i++) {
             for (int j = jmin; j<jmax; j++) {
                 int number = sudoku.getFields()[i][j];
+                if (number == 0) {
+                    continue; // 0 = leeres Feld
+                }
                 if (numbers.contains(number)) {
-                    return false;
+                    return false; // Zahl kam 2x vor
                 }
                 numbers.add(number);
             }
