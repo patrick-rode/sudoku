@@ -17,25 +17,13 @@ gebaut und mit
 `java -jar build/libs/sudoku-0.0.1.jar`
 gestartet werden.
 
-# Beispiele
+# Funktionen
 
-Testen kann man ihn dann mit Postman oder teilweise auch mit einem Internet Explorer. Beispielsweise kann die URL
+Wenn der Service laeuft, kann man diese Links im Browser aufrufen und die Ergebnisse einsehen:
+
+http://localhost:8080/sudoku/validate?sudokuParam=005600020038207640006980530050032090400090700093040208010300962360409000800001300
+http://localhost:8080/sudoku/display?sudokuParam=005600020038207640006980530050032090400090700093040208010300962360409000800001300
 http://localhost:8080/sudoku/solve?sudokuParam=005600020038207640006980530050032090400090700093040208010300962360409000800001300
-im Browser aufgerufen werden. Damit wird ein Sudoku geloest, das man sich auch wie folgt aufmalen kann:
-
-```
-005  600  020
-038  207  640
-006  980  530
-
-050  032  090
-400  090  700
-093  040  208
-
-010  300  962
-360  409  000
-800  001  300
-```
 
 # Schnittstelle
 
