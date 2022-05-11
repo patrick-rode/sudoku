@@ -50,10 +50,10 @@ new int[][]{
 ```
 ein Sudoku instanziieren, so nennen wir in der obersten Zeile die ersten drei Werte
 
-```math
+$$
 \begin{aligned}
 \dot{x} & = \sigma(y-x) \\
 \dot{y} & = \rho x - y - xz \\
 \dot{z} & = -\beta z + xy
 \end{aligned}
-```
+$$
