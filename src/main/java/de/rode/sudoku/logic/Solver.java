@@ -18,6 +18,13 @@ public class Solver {
 
     private final Displayer displayer;
 
+    /**
+     * Wir gehen Feld fuer Feld vor und pruefen mit getOptionsForField welche moeglichen Werte wir hier eintragen koennen.
+     * Wenn es nur 1 Moeglichkeit gibt, so tragen wir sie ein. Wenn nicht, machen wir einfach mit dem naechsten Feld weiter.
+     *
+     * @param sudoku ist der Eingabeparameter
+     * @return gibt einen String zurueck, der den kompletten Loesungsverlauf als HTML darstellt
+     */
     public String solve(Sudoku sudoku) {
         int[][] fields = sudoku.getFields();
         List<String> sudokuStrings = Lists.newArrayList(displayer.display(sudoku));
@@ -47,20 +54,25 @@ public class Solver {
         return "<center>Wir haben angefangen mit</center>" + String.join("<center>Das wurde zu</center>", sudokuStrings);
     }
 
+    /**
+     * Um rauszufinden, welche Werte wir in ein einzelnes Feld schreiben koennten, fangen wir mit allen Werten 1-9 an.
+     * Wenn wir in der Spalte / in der Zeile / im Quadrat schon vorhandene Felder finden, streichen wir die Werte.
+     * Das Set an Werten, die auf diese Weise nicht gestrichen wurden, geben wir zurueck.
+     */
     private Set<Integer> getOptionsForField(int[][] fields, int column, int row) {
         // 1. lasse erstmal alle Zahlen 1-9 zu
         HashSet<Integer> output = new HashSet<>();
-        for (int i=1; i<10; i++) {
+        for (int i = 1; i < 10; i++) {
             output.add(i);
         }
 
         // 2. streiche alles weg, was in der selben Zeile ist
-        for (int i=0; i<9; i++) {
+        for (int i = 0; i < 9; i++) {
             output.remove(fields[i][row]);
         }
 
         // 3. streiche alles weg, was in der selben Spalte ist
-        for (int j=0; j<9; j++) {
+        for (int j = 0; j < 9; j++) {
             output.remove(fields[column][j]);
         }
 
@@ -69,9 +81,9 @@ public class Solver {
         int imax = imin + 3;
         int jmin = row < 3 ? 0 : (row < 6 ? 3 : 6);
         int jmax = jmin + 3;
-        for (int i=imin; i<imax; i++) {
-            for (int j = jmin; j<jmax; j++) {
-                output.remove(fields[i][j]);
+        for (int j = jmin; j < jmax; j++) {
+            for (int i = imin; i < imax; i++) {
+                output.remove(fields[j][i]);
             }
         }
 
