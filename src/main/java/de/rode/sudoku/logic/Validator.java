@@ -63,7 +63,7 @@ public class Validator {
             }
         }
 
-        return false;
+        return true;
     }
 
     public boolean sizeLegit(Sudoku sudoku) {
@@ -113,7 +113,7 @@ public class Validator {
 
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                if (!squareLegit(sudoku, i, j)) {
+                if (!squareLegit(sudoku, i*3, j*3)) {
                     return Optional.of(SudokuValidateError.builder()
                             .timestamp(ZonedDateTime.now())
                             .status(400)
