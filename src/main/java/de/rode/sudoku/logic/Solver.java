@@ -27,7 +27,7 @@ public class Solver {
      */
     public String solve(Sudoku sudoku) {
         int[][] fields = sudoku.getFields();
-        List<String> sudokuStrings = Lists.newArrayList(displayer.display(sudoku));
+        List<String> sudokuStrings = Lists.newArrayList(displayer.writeTable(sudoku));
 
         // default wert auf true setzen, damit wir den loop betreten
         boolean didSomethingInsideTheLoop = true;
@@ -37,21 +37,21 @@ public class Solver {
             didSomethingInsideTheLoop = false;
             for (int j = 0; j < 9; j++) {
                 for (int i = 0; i < 9; i++) {
-                    if (fields[i][j] == 0) {
+                    if (fields[j][i] == 0) {
                         Set<Integer> options = getOptionsForField(fields, i, j);
                         if (options.isEmpty()) {
-                            throw new IllegalStateException("shit");
+                            return "Das Sudoku ist unmoeglich.";
                         } else if (options.size() == 1) {
-                            fields[i][j] = options.iterator().next();
+                            fields[j][i] = options.iterator().next();
                             didSomethingInsideTheLoop = true;
                         }
                     }
                 }
             }
             if (didSomethingInsideTheLoop)
-                sudokuStrings.add(displayer.display(sudoku));
+                sudokuStrings.add(displayer.writeTable(sudoku));
         }
-        return "<center>Wir haben angefangen mit</center>" + String.join("<center>Das wurde zu</center>", sudokuStrings);
+        return displayer.wrapWithCss("Wir haben angefangen mit" + String.join("Das wurde zu", sudokuStrings));
     }
 
     /**
@@ -68,12 +68,12 @@ public class Solver {
 
         // 2. streiche alles weg, was in der selben Zeile ist
         for (int i = 0; i < 9; i++) {
-            output.remove(fields[i][row]);
+            output.remove(fields[row][i]);
         }
 
         // 3. streiche alles weg, was in der selben Spalte ist
         for (int j = 0; j < 9; j++) {
-            output.remove(fields[column][j]);
+            output.remove(fields[j][column]);
         }
 
         // 4. streiche alles weg, was im selben Quadrat ist

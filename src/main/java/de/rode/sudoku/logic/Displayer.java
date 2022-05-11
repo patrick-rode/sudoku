@@ -8,56 +8,58 @@ import org.springframework.stereotype.Component;
 @Component
 public class Displayer {
 
+    private final String css = "<!DOCTYPE html>" +
+            "<html>" +
+            "<head>" +
+            "<style>" +
+            "table {" +
+            "  margin:1em auto;" +
+            "}" +
+            "td {" +
+            "  height:30px;" +
+            "  width:30px;" +
+            "  border:1px solid;" +
+            "  text-align:center;" +
+            "}" +
+            "td:first-child {" +
+            "  border-left:solid;" +
+            "}" +
+            "td:nth-child(3n) {" +
+            "  border-right:solid ;" +
+            "}" +
+            "tr:first-child {" +
+            "  border-top:solid;" +
+            "}" +
+            "tr:nth-child(3n) td {" +
+            "  border-bottom:solid ;" +
+            "}" +
+            "</style>" +
+            "</head>";
+
     public String display(Sudoku sudoku) {
+        return css + "<body><center>...Und hier ist Ihr Herzblatt:" + writeTable(sudoku) + "</center></body></html>";
+    }
 
-        final StringBuilder stringBuilder = new StringBuilder("<!DOCTYPE html>\n" +
-                "<html>\n" +
-                "<head>\n" +
-                "<style>\n" +
-                "table {\n" +
-                "  margin:1em auto;\n" +
-                "}\n" +
-                "td {\n" +
-                "  height:30px;\n" +
-                "  width:30px;\n" +
-                "  border:1px solid;\n" +
-                "  text-align:center;\n" +
-                "}\n" +
-                "td:first-child {\n" +
-                "  border-left:solid;\n" +
-                "}\n" +
-                "td:nth-child(3n) {\n" +
-                "  border-right:solid ;\n" +
-                "}\n" +
-                "tr:first-child {\n" +
-                "  border-top:solid;\n" +
-                "}\n" +
-                "tr:nth-child(3n) td {\n" +
-                "  border-bottom:solid ;\n" +
-                "}" +
-                "</style>\n" +
-                "</head>\n" +
-                "<body>" +
+    public String wrapWithCss(String string) {
+        return css + "<body><center>" + string + "</center></body></html>";
+    }
 
-                "<table id=\"sudoku\">\n" +
-                "\t<tbody>");
+    public String writeTable(Sudoku sudoku) {
+        final StringBuilder stringBuilder = new StringBuilder("<table>\n");
 
         for (int j=0; j<9; j++) {
-            stringBuilder.append("<tr>");
+            stringBuilder.append("<tr>\n");
             for (int i=0; i<9; i++) {
+                int number = sudoku.getFields()[j][i];
                 stringBuilder
                         .append("<td>")
-                        .append(sudoku.getFields()[i][j])
-                        .append("</td>");
+                        .append(number)
+                        .append("</td>\n");
             }
-            stringBuilder.append("</tr>");
+            stringBuilder.append("</tr>\n");
         }
         return stringBuilder
-                .append("\t</tbody>\n" +
-                        "</table>\n" +
-                        "\n" +
-                        "</body>\n" +
-                        "</html>")
+                .append("</table>\n")
                 .toString();
     }
 

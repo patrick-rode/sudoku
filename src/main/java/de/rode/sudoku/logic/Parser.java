@@ -16,7 +16,7 @@ public class Parser {
             for (int i = 0; i < 9; i++) {
                 int start = j * 9 + i;
                 int number = Integer.parseInt(string.substring(start, start + 1));
-                fields[i][j] = number;
+                fields[j][i] = number;
             }
         }
         return new Sudoku(fields, string);
