@@ -45,7 +45,7 @@ public class SudokuService {
         }
     }
 
-    @GetMapping("/display/{string}")
+    @GetMapping("/display")
     public ResponseEntity display(@RequestParam("sudokuParam") String sudokuParam) {
 
         final Either<SudokuValidateError, Sudoku> either = parser.parseFromString(sudokuParam);
@@ -60,7 +60,7 @@ public class SudokuService {
 
     }
 
-    @GetMapping("/solve/{string}")
+    @GetMapping("/solve")
     public ResponseEntity solve(@RequestParam("sudokuParam") String sudokuParam) {
 
         final Either<SudokuValidateError, Sudoku> either = parser.parseFromString(sudokuParam);
