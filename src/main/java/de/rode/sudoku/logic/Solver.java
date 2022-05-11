@@ -1,5 +1,6 @@
 package de.rode.sudoku.logic;
 
+import com.google.common.collect.Lists;
 import de.rode.sudoku.dto.Sudoku;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -18,7 +20,7 @@ public class Solver {
 
     public String solve(Sudoku sudoku) {
         int[][] fields = sudoku.getFields();
-        String output = "";
+        List<String> sudokuStrings = Lists.newArrayList(displayer.display(sudoku));
 
         // default wert auf true setzen, damit wir den loop betreten
         boolean didSomethingInsideTheLoop = true;
@@ -39,9 +41,10 @@ public class Solver {
                     }
                 }
             }
-            output += displayer.display(sudoku);
+            if (didSomethingInsideTheLoop)
+                sudokuStrings.add(displayer.display(sudoku));
         }
-        return output;
+        return "<center>Wir haben angefangen mit</center>" + String.join("<center>Das wurde zu</center>", sudokuStrings);
     }
 
     private Set<Integer> getOptionsForField(int[][] fields, int column, int row) {
